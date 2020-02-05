@@ -66,7 +66,5 @@ export class MyAcademiesComponent implements OnInit {
   });
  });
 });
-
-}
-
+  }
 }

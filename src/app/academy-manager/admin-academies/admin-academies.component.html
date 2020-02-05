@@ -9,6 +9,7 @@
     <thead class="thead-dark">
       <tr>
         <th>Nome</th>
+        <th> Status</th>
         <th>Ver</th>
         <th>Editar</th>
         <th>Eliminar</th>
@@ -17,8 +18,18 @@
     <tbody>
       <tr *ngFor="let academy of academies$ | async; let i = index;" id="{{i}}">
         <td>{{academy.edName}}</td>
+        <td> 
+          <!-- <button class="btn btn-borderless float-right" *ngIf="inUpdate===false" (click)="toggleUpdateAccount()">
+            <fa-icon [icon]="faEdit" size="2x"></fa-icon>
+        </button> -->
+          <button (click)="openAcademyById(academy.status)" class="fas fa-toggle-on">
+          <fa-icon [icon]="faToggleOn"></fa-icon> 
+          </button>
+        </td>
         <td>
-          <button (click)="openAcademyById(academy.id)" class="btn btn-success">Ver</button>
+          <button (click)="openAcademyById(academy.id)" class="fas fa-eye">
+            <fa-icon [icon]="faEye"></fa-icon>
+          </button>
         </td>
         <td>
           <button (click)="openModalUpdateAcademy(templateUpdateAcademy, academy)" class="btn-borderless btn-edit">

@@ -3,7 +3,8 @@ import { ReplaySubject } from 'rxjs';
 import { Academy } from '../shared/models/academy';
 import { AcademyService } from '../shared/services/academy.service';
 import { BsModalService, BsModalRef, BsDropdownConfig } from 'ngx-bootstrap';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashAlt, faToggleOff, faToggleOn, faEye} from '@fortawesome/free-solid-svg-icons';
+import { faSort } from '@fortawesome/free-solid-svg-icons';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -26,6 +27,10 @@ export class AdminAcademiesComponent implements OnInit {
 
   faEdit = faEdit;
   faTrashAlt = faTrashAlt;
+  faToggleOff = faToggleOff;
+  faToggleOn = faToggleOn;
+  faEye = faEye;
+  
 
   modalRef: BsModalRef;
   public academies$: ReplaySubject<Academy[]> = new ReplaySubject(1);
@@ -43,6 +48,9 @@ export class AdminAcademiesComponent implements OnInit {
   public academyToUpdate: Academy = new Academy();
   public academyToDeleteRow: number;
   public showTable = false;
+  private sorted = false;
+  private filterSorted = false;
+  public faSort = faSort;
 
   constructor(
     private router: Router,
@@ -130,4 +138,32 @@ export class AdminAcademiesComponent implements OnInit {
   public openAcademyById(id: number) {
     this.router.navigate(['academy-manager/academy/' + id]);
   }
+
+/*   public filterTable() {
+    if (this.nameFilter !== '') {
+      if (this.academyFilter !== 'Todas') {
+        this.filteredTeachers = this.teacherUserAccounts.filter(
+          teacher => teacher['teacherUser'].name.toLowerCase().includes(this.nameFilter.toLowerCase())
+            && teacher['academyNames'].includes(this.academyFilter));
+        this.teacherUserAccounts$.next(this.filteredTeachers);
+      } else {
+        this.filteredTeachers = this.teacherUserAccounts.filter(teacher =>
+          teacher['teacherUser'].name.toLowerCase().includes(this.nameFilter.toLowerCase()));
+        this.teacherUserAccounts$.next(this.filteredTeachers);
+      }
+    } else if (this.academyFilter !== 'Todas') {
+      this.filteredTeachers = this.teacherUserAccounts.filter(teacher => teacher['academyNames'].includes(this.academyFilter));
+      this.teacherUserAccounts$.next(this.filteredTeachers);
+    } else {
+      this.teacherUserAccounts$.next(this.teacherUserAccounts);
+    }
+  } */
+
+
+
+
+
+
+
+
 }
