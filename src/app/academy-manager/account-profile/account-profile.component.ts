@@ -202,7 +202,7 @@ export class AccountProfileComponent implements OnInit {
   public validateMissedDate() {
     let uniqueDate = true;
     this.misses.forEach(missed => {
-      if (this.newMissedClass.data === missed.data) {
+      if (this.newMissedClass.date === missed.date) {
         uniqueDate = false;
       }
     });
@@ -210,7 +210,7 @@ export class AccountProfileComponent implements OnInit {
   }
 
   public addMissedDay() {
-    this.newMissedClass.data = new Date(this.missedDay);
+    this.newMissedClass.date = new Date(this.missedDay).getTime();
     this.newMissedClass.accountId = this.account.id;
     this.newMissedClass.justified = false;
     if (this.validateMissedDate()) {
@@ -260,13 +260,13 @@ export class AccountProfileComponent implements OnInit {
     const month = dateSent.getMonth() + 1;
     const day = dateSent.getDate();
     if (month < 10 && day < 10) {
-      this.newDeclaration.dateSent = dateSent.getFullYear() + "-0" + month + "-0" + dateSent.getDate();
+      this.newDeclaration.dateSent = dateSent.getFullYear() + '-0' + month + '-0' + dateSent.getDate();
     } else if (month < 10) {
-      this.newDeclaration.dateSent = dateSent.getFullYear() + "-0" + (dateSent.getMonth() + 1) + "-" + dateSent.getDate();
+      this.newDeclaration.dateSent = dateSent.getFullYear() + '-0' + (dateSent.getMonth() + 1) + '-' + dateSent.getDate();
     } else if (day < 10) {
-      this.newDeclaration.dateSent = dateSent.getFullYear() + "-" + (dateSent.getMonth() + 1) + "-0" + dateSent.getDate();
+      this.newDeclaration.dateSent = dateSent.getFullYear() + '-' + (dateSent.getMonth() + 1) + '-0' + dateSent.getDate();
     } else {
-      this.newDeclaration.dateSent = dateSent.getFullYear() + "-" + (dateSent.getMonth() + 1) + "-" + dateSent.getDate();
+      this.newDeclaration.dateSent = dateSent.getFullYear() + '-' + (dateSent.getMonth() + 1) + '-' + dateSent.getDate();
     }
     this.declarationsService.create(this.newDeclaration).subscribe(
       (id: number) => {
@@ -287,7 +287,15 @@ export class AccountProfileComponent implements OnInit {
         this.declarations[index] = declaration;
         this.declarations$.next(this.declarations);
       }
-    )
+    );
+  }
+
+  public deleteDeclaration(id: number, index: number) {
+    this.declarationsService.delete(id).subscribe(
+      (res: any) => {
+        this.declarations.splice(index, 1);
+      }
+    );
   }
 
 

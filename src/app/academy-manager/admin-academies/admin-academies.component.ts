@@ -3,8 +3,12 @@ import { ReplaySubject } from 'rxjs';
 import { Academy } from '../shared/models/academy';
 import { AcademyService } from '../shared/services/academy.service';
 import { BsModalService, BsModalRef, BsDropdownConfig } from 'ngx-bootstrap';
+<<<<<<< HEAD
 import { faEdit, faTrashAlt, faToggleOff, faToggleOn, faEye} from '@fortawesome/free-solid-svg-icons';
 import { faSort } from '@fortawesome/free-solid-svg-icons';
+=======
+import { faEdit, faTrashAlt, faEye, faSort } from '@fortawesome/free-solid-svg-icons';
+>>>>>>> dev
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -27,12 +31,18 @@ export class AdminAcademiesComponent implements OnInit {
 
   faEdit = faEdit;
   faTrashAlt = faTrashAlt;
+<<<<<<< HEAD
   faToggleOff = faToggleOff;
   faToggleOn = faToggleOn;
   faEye = faEye;
   
+=======
+  faEye = faEye;
+  faSort = faSort;
+>>>>>>> dev
 
   modalRef: BsModalRef;
+  public academies: Academy[];
   public academies$: ReplaySubject<Academy[]> = new ReplaySubject(1);
   public edNameField: string;
   public dates: string;
@@ -43,14 +53,17 @@ export class AdminAcademiesComponent implements OnInit {
   public warningField: string;
   public usefulInfoField: string;
   public academyTypeField: string;
-  public academies: Academy[];
   public academyToCreate: Academy = new Academy();
   public academyToUpdate: Academy = new Academy();
   public academyToDeleteRow: number;
   public showTable = false;
-  private sorted = false;
-  private filterSorted = false;
-  public faSort = faSort;
+  private sortedByName = false;
+  private filterSortedByName = false;
+  private sortedByStatus = false;
+  private filterSortedByStatus = false;
+  private filteredAcademies: Academy[] = [];
+  public nameFilter = '';
+  public statusFilter = '';
 
   constructor(
     private router: Router,
@@ -75,7 +88,6 @@ export class AdminAcademiesComponent implements OnInit {
   }
 
   public createAcademy(dates: string) {
-    console.log(dates);
     this.getDates(dates, this.academyToCreate);
     this.academyToCreate.status = 'NOTACTIVE';
     this.academyService.createAcademy(this.academyToCreate).subscribe(
@@ -89,7 +101,6 @@ export class AdminAcademiesComponent implements OnInit {
   }
 
   public updateAcademy(dates: string) {
-    console.log(dates);
     this.getDates(dates, this.academyToUpdate);
     this.academyService.updateAcademy(this.academyToUpdate).subscribe(
       (msg: string) => {
@@ -139,31 +150,65 @@ export class AdminAcademiesComponent implements OnInit {
     this.router.navigate(['academy-manager/academy/' + id]);
   }
 
-/*   public filterTable() {
+  public sortTableByName() {
     if (this.nameFilter !== '') {
-      if (this.academyFilter !== 'Todas') {
-        this.filteredTeachers = this.teacherUserAccounts.filter(
-          teacher => teacher['teacherUser'].name.toLowerCase().includes(this.nameFilter.toLowerCase())
-            && teacher['academyNames'].includes(this.academyFilter));
-        this.teacherUserAccounts$.next(this.filteredTeachers);
+      if (this.filterSortedByName) {
+        this.filteredAcademies.reverse();
       } else {
-        this.filteredTeachers = this.teacherUserAccounts.filter(teacher =>
-          teacher['teacherUser'].name.toLowerCase().includes(this.nameFilter.toLowerCase()));
-        this.teacherUserAccounts$.next(this.filteredTeachers);
+        this.filteredAcademies.sort((a, b) =>
+          ((a.edName === b.edName) ? 0 : ((a.edName > b.edName) ? 1 : -1)));
+        this.sortedByName = true;
+        this.sortedByStatus = false;
+        this.filterSortedByStatus = false;
       }
-    } else if (this.academyFilter !== 'Todas') {
-      this.filteredTeachers = this.teacherUserAccounts.filter(teacher => teacher['academyNames'].includes(this.academyFilter));
-      this.teacherUserAccounts$.next(this.filteredTeachers);
+      this.academies$.next(this.filteredAcademies);
     } else {
-      this.teacherUserAccounts$.next(this.teacherUserAccounts);
+      if (this.sortedByName) {
+        this.academies.reverse();
+      } else {
+        this.academies.sort((a, b) =>
+          ((a.edName === b.edName) ? 0 : ((a.edName > b.edName) ? 1 : -1)));
+        this.sortedByName = true;
+        this.sortedByStatus = false;
+        this.filterSortedByStatus = false;
+      }
+      this.academies$.next(this.academies);
     }
-  } */
+  }
 
+  public sortTableByStatus() {
+    if (this.statusFilter !== '') {
+      if (this.filterSortedByStatus) {
+        this.filteredAcademies.reverse();
+      } else {
+        this.filteredAcademies.sort((a, b) =>
+          ((a.status === b.status) ? 0 : ((a.status > b.status) ? 1 : -1)));
+        this.sortedByStatus = true;
+        this.sortedByName = false;
+        this.filterSortedByName = false;
+      }
+      this.academies$.next(this.filteredAcademies);
+    } else {
+      if (this.sortedByStatus) {
+        this.academies.reverse();
+      } else {
+        this.academies.sort((a, b) =>
+          ((a.status === b.status) ? 0 : ((a.status > b.status) ? 1 : -1)));
+        this.sortedByStatus = true;
+        this.sortedByName = false;
+        this.filterSortedByName = false;
+      }
+      this.academies$.next(this.academies);
+    }
+  }
 
-
-
-
-
-
-
+  public filterTable() {
+    if (this.nameFilter !== '') {
+      this.filteredAcademies = this.academies.filter(
+        academy => academy.edName.toLowerCase().includes(this.nameFilter.toLowerCase()));
+      this.academies$.next(this.filteredAcademies);
+    } else {
+      this.academies$.next(this.academies);
+    }
+  }
 }

@@ -255,6 +255,7 @@ export class ModulesComponent implements OnInit {
     this.router.navigate(['/academy-manager/profile/' + accountId]);
   }
   public updateModule() {
+    delete this.module.userTeacher;
     this.updateTeachers();
     this.moduleService.updateModule(this.module).subscribe((res: any) => {
       this.module$.next(this.module);
@@ -364,11 +365,15 @@ export class ModulesComponent implements OnInit {
             this.accountService.getByUserId(teacher.id).subscribe(
               (teacherAccount: Account) => {
                 teacherAccount.themes.forEach(teacherTheme => {
-                  this.module.themes.forEach(moduleTheme => {
-                    if (moduleTheme.id === teacherTheme.id) {
-                      include = true;
-                    }
-                  });
+                  if (this.module.themes.length > 0) {
+                    this.module.themes.forEach(moduleTheme => {
+                      if (moduleTheme.id === teacherTheme.id) {
+                        include = true;
+                      }
+                    });
+                  } else {
+                    include = true;
+                  }
                 });
                 if (include === true) {
                   this.allTeachers.push({ 'account': teacherAccount, 'name': teacher.name });
